@@ -1,0 +1,43 @@
+{{ define "main" }}
+<header class="max-w-prose">
+  <h1 class="mt-0 text-4xl font-extrabold">{{ .Title }}</h1>
+  <div class="prose dark:prose-invert">{{ .Content }}</div>
+</header>
+
+{{ $talks := .Pages }}
+
+{{ if $talks }}
+  <section class="mt-8 grid gap-6">
+    {{ range $talks.ByDate.Reverse }}
+      <article class="dc-talk rounded-lg border border-neutral-300 p-5 dark:border-neutral-600">
+        {{/* Poster frame straight from the video id, so no API key and no
+             separate image to maintain. */}}
+        {{ with .Params.youtube }}
+          <a class="dc-talk__thumb" href="{{ $.RelPermalink }}" tabindex="-1" aria-hidden="true">
+            <img src="https://i.ytimg.com/vi/{{ . }}/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">
+          </a>
+        {{ end }}
+        <h2 class="mt-0 text-2xl"><a class="no-underline hover:text-primary-400" href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+        <p class="text-sm opacity-80">
+          {{ with .Params.speaker }}{{ . }} &middot; {{ end }}{{ .Date.Format "January 2, 2006" }}
+        </p>
+        {{ with .Params.summary }}<p class="mt-2">{{ . }}</p>{{ end }}
+        {{ with .Params.tags }}
+          <p class="mt-2 text-sm">
+            {{ range . }}<a class="mr-2 no-underline hover:text-primary-400" href="/tags/{{ . | urlize }}/">#{{ . }}</a>{{ end }}
+          </p>
+        {{ end }}
+      </article>
+    {{ end }}
+  </section>
+{{ else }}
+  {{/* Deliberate empty state. A blank list reads as a broken page; this sends the
+       reader somewhere useful instead. */}}
+  <section class="mt-8 rounded-lg border border-neutral-300 p-6 dark:border-neutral-600">
+    <h2 class="mt-0 text-2xl font-bold">Nothing here yet</h2>
+    <p class="mt-2">We are just getting started with recording talks. Check back after
+      the next meeting, or better yet,
+      <a class="underline hover:text-primary-400" href="/meetings/">come see one in person</a>.</p>
+  </section>
+{{ end }}
+{{ end }}

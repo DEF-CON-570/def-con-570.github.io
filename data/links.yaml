@@ -1,0 +1,22 @@
+# Every outbound link for the group, defined once. The nav, footer, homepage and
+# contact page all read from here, so they cannot drift apart.
+# `icon` must name a file in themes/blowfish/assets/icons/ (without .svg).
+# `weight` controls display order; lower comes first.
+discord:
+  name: "Discord"
+  url: "https://discord.gg/wcxhNzc5e7"
+  icon: "discord"
+  weight: 10
+  blurb: "Day-to-day chat. Fastest way to reach an organizer."
+meetup:
+  name: "Meetup"
+  url: "https://www.meetup.com/def-con-570/"
+  icon: "location-dot"
+  weight: 20
+  blurb: "RSVP for meetings and see what is scheduled."
+forum:
+  name: "DEF CON Forums"
+  url: "https://forum.defcon.org/node/248085"
+  icon: "comment"
+  weight: 25
+  blurb: "Our group's page on the official DEF CON forums."

@@ -1,0 +1,28 @@
+{{/* Embedded OpenStreetMap with a marker, plus links out for directions.
+
+     OSM rather than Google Maps: no API key, no tracking cookies, and no
+     account needed. The bbox is computed from the point so callers only pass
+     coordinates.
+
+     Usage: {{< map lat="41.2453" lon="-75.8822" label="Rodano's" >}} */}}
+{{- $v := hugo.Data.group.venue -}}
+{{- $lat := float (.Get "lat" | default $v.lat) -}}
+{{- $lon := float (.Get "lon" | default $v.lon) -}}
+{{- $pad := float (.Get "pad" | default 0.0035) -}}
+{{- $label := .Get "label" | default (printf "%s, %s, %s" $v.name $v.street $v.city) -}}
+{{- $bbox := printf "%.5f,%.5f,%.5f,%.5f" (sub $lon $pad) (sub $lat (div $pad 2.0)) (add $lon $pad) (add $lat (div $pad 2.0)) -}}
+<div class="dc-map not-prose">
+  <iframe
+    class="dc-map__frame"
+    title="Map showing {{ $label }}"
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+    src="https://www.openstreetmap.org/export/embed.html?bbox={{ $bbox }}&amp;layer=mapnik&amp;marker={{ $lat }},{{ $lon }}"></iframe>
+  <p class="dc-map__links">
+    <a href="https://www.openstreetmap.org/?mlat={{ $lat }}&amp;mlon={{ $lon }}#map=17/{{ $lat }}/{{ $lon }}"
+       rel="noopener noreferrer" target="_blank">Larger map</a>
+    <span aria-hidden="true">·</span>
+    <a href="https://www.google.com/maps/dir/?api=1&amp;destination={{ $lat }},{{ $lon }}"
+       rel="noopener noreferrer" target="_blank">Directions</a>
+  </p>
+</div>

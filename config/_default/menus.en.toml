@@ -1,0 +1,39 @@
+# Main navigation. pageRef targets are created in later tasks; Hugo renders the
+# links regardless and they resolve once the pages exist.
+[[main]]
+  name = "About"
+  pageRef = "about"
+  weight = 10
+
+[[main]]
+  name = "Meetings"
+  pageRef = "meetings"
+  weight = 20
+
+[[main]]
+  name = "Recordings"
+  pageRef = "recordings"
+  weight = 30
+
+[[main]]
+  name = "Contact"
+  pageRef = "contact"
+  weight = 40
+
+# NOTE: Hugo menus are config and cannot read data files, so these footer links
+# duplicate data/links.yaml. That file is the source of truth, so if you add or
+# change a link there, mirror it here.
+[[footer]]
+  name = "Discord"
+  url = "https://discord.gg/wcxhNzc5e7"
+  weight = 10
+
+[[footer]]
+  name = "Meetup"
+  url = "https://www.meetup.com/def-con-570/"
+  weight = 20
+
+[[footer]]
+  name = "DEF CON Forums"
+  url = "https://forum.defcon.org/node/248085"
+  weight = 25

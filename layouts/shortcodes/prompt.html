@@ -1,0 +1,8 @@
+{{/* Terminal-style line: a green sigil, the command, then the output with a
+     blinking block cursor. Styling lives in custom.css so every instance matches. */}}
+<div class="not-prose dc-prompt">
+  <div class="dc-prompt__cmd">
+    <span class="dc-prompt__sigil">$</span> {{ .Get "cmd" | default "whoami" }}
+  </div>
+  <div class="dc-prompt__out">{{ .Inner | .Page.RenderString }}<span class="dc-prompt__cursor" aria-hidden="true"></span></div>
+</div>

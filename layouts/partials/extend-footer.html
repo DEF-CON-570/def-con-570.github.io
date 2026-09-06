@@ -1,0 +1,68 @@
+{{/* Footer sign-off row. The theme's own attribution is disabled in params so
+     this line and the credit can share a single flex row instead of stacking.
+     Also carries the countdown script for the next-meeting card. */}}
+<div class="dc-footer-prompt">
+  <span class="dc-footer-prompt__cmd">
+    <span class="dc-prompt__sigil">$</span> uptime
+    <span class="dc-footer-prompt__out">DEF CON 570, meeting since 2022</span>
+  </span>
+  <span class="dc-footer-prompt__attr">
+    Powered by
+    <a href="https://gohugo.io/" target="_blank" rel="noopener noreferrer">Hugo</a> &amp;
+    <a href="https://blowfish.page/" target="_blank" rel="noopener noreferrer">Blowfish</a>
+  </span>
+</div>
+<script>
+  // Turns the meeting date into "in N days". Done client-side so it can never
+  // go stale between builds. Without JS the date alone still shows.
+  (function () {
+    var el = document.querySelector("[data-dc-countdown]");
+    if (!el) return;
+    var when = new Date(el.getAttribute("data-dc-countdown"));
+    if (isNaN(when)) return;
+    var days = Math.ceil((when - new Date()) / 86400000);
+    var text =
+      days < 0 ? "" :
+      days === 0 ? "today" :
+      days === 1 ? "tomorrow" :
+      "in " + days + " days";
+    if (text) { el.textContent = text; el.hidden = false; }
+  })();
+
+  // Hover the tagline and it scrambles, then resolves back. Fires only on
+  // hover, and not at all for visitors who ask for reduced motion.
+  (function () {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var out = document.querySelector(".dc-prompt__out");
+    if (!out) return;
+    var node = out.firstChild;
+    if (!node || node.nodeType !== 3) return;
+
+    var original = node.nodeValue;
+    var glyphs = "!<>-_\\/[]{}=+*^?#01";
+    var timer = null;
+    var running = false;
+
+    out.addEventListener("mouseenter", function () {
+      if (running) return;
+      running = true;
+      var revealed = 0;
+      clearInterval(timer);
+      timer = setInterval(function () {
+        node.nodeValue = original
+          .split("")
+          .map(function (c, i) {
+            if (c === " ") return " ";
+            return i < revealed ? original[i] : glyphs[Math.floor(Math.random() * glyphs.length)];
+          })
+          .join("");
+        revealed += 1.5;
+        if (revealed >= original.length) {
+          clearInterval(timer);
+          node.nodeValue = original;
+          running = false;
+        }
+      }, 28);
+    });
+  })();
+</script>

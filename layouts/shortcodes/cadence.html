@@ -1,0 +1,8 @@
+{{- /* "first Thursday of every month at 6:00 PM". Pass with="date" for just the
+       cadence, or with="time" for just the time. */ -}}
+{{- $g := hugo.Data.group -}}
+{{- $what := .Get "with" | default "both" -}}
+{{- if eq $what "date" -}}{{ $g.cadence }}
+{{- else if eq $what "time" -}}{{ $g.time }}
+{{- else -}}{{ $g.cadence }} at {{ $g.time }}
+{{- end -}}

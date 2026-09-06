@@ -1,0 +1,41 @@
+{{/* Compact list of upcoming meetings from data/meetups.yaml.
+
+     Params via dict: "limit" (how many to show, default 5) and "skip" (how many
+     of the soonest to omit, default 0). The list includes the next meeting even
+     though the card above repeats it, so it reads as a complete schedule.
+
+     Same filter-and-sort as next-meetup.html: past dates are dropped, the rest
+     ordered soonest first. */}}
+{{ $limit := .limit | default 5 }}
+{{ $skip := .skip | default 0 }}
+
+{{ $upcoming := slice }}
+{{ range (hugo.Data.meetups | default dict).meetings }}
+  {{ $meeting := . }}
+  {{ with .date }}
+    {{ $d := time.AsTime . }}
+    {{ if $d.After now }}
+      {{ $upcoming = $upcoming | append (dict "when" $d "meeting" $meeting) }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+{{ $sorted := sort $upcoming "when" }}
+{{ $rest := after $skip $sorted }}
+{{ $shown := first (math.Min $limit (len $rest)) $rest }}
+
+{{ if $shown }}
+  <ul class="dc-dates not-prose">
+    {{ range $shown }}
+      <li class="dc-dates__row">
+        <span class="dc-dates__date">{{ .when.Format "Monday, January 2, 2006" }}</span>
+        <span class="dc-dates__time">{{ .when.Format "3:04 PM" }}</span>
+        {{ with .meeting.rsvp }}
+          <a class="dc-dates__rsvp" href="{{ . }}" rel="noopener noreferrer" target="_blank">RSVP</a>
+        {{ end }}
+      </li>
+    {{ end }}
+  </ul>
+{{ else }}
+  <p>Nothing on the calendar yet. We meet on the {{ hugo.Data.group.cadence }}, so dates
+    will appear here as they are confirmed.</p>
+{{ end }}

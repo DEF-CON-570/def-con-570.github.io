@@ -1,0 +1,15 @@
+{{- /* Venue from data/group.yaml.
+       style="inline" -> Rodano's, Wilkes-Barre
+       style="short"  -> 53 Public Square, Wilkes-Barre
+       style="block"  -> name / street / city, state zip on three lines (default) */ -}}
+{{- $v := hugo.Data.group.venue -}}
+{{- $style := .Get "style" | default "block" -}}
+{{- if eq $style "inline" -}}
+{{ $v.name }}, {{ $v.city }}
+{{- else if eq $style "short" -}}
+{{ $v.street }}, {{ $v.city }}
+{{- else -}}
+<p><strong>{{ $v.name }}</strong><br>
+{{ $v.street }}<br>
+{{ $v.city }}, {{ $v.state }} {{ $v.zip }}</p>
+{{- end -}}

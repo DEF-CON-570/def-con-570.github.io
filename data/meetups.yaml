@@ -1,0 +1,32 @@
+# Scheduled meetings. Only dates listed here appear on the site; nothing is
+# inferred from the monthly cadence, so a month that moves off the first
+# Thursday is simply entered with its real date.
+#
+# The site shows the soonest entry whose date has not passed. Past entries are
+# ignored, and can be left as a record or deleted. When every date here has
+# passed, the site shows a "check Meetup" message instead of advertising a
+# meeting that already happened, so top this list up as meetings are confirmed.
+#
+# Dates are local wall-clock time (America/New_York, set in hugo.toml). Do not
+# add a UTC offset: writing one by hand is how a meeting ends up an hour off
+# when daylight saving changes.
+#
+# `rsvp` should be the Meetup event deep link once the event exists:
+#   https://www.meetup.com/def-con-570/events/<id>/
+# Until then it points at the events list.
+meetings:
+  - date: "2026-10-01T18:00:00"
+    title: "DEF CON 570 Monthly Meetup"
+    location: "Rodano's, Wilkes-Barre, PA"
+    rsvp: "https://www.meetup.com/def-con-570/events/316448170/"
+    flyer: ""
+  - date: "2026-11-05T18:00:00"
+    title: "DEF CON 570 Monthly Meetup"
+    location: "Rodano's, Wilkes-Barre, PA"
+    rsvp: "https://www.meetup.com/def-con-570/events/316449586/"
+    flyer: ""
+  - date: "2026-12-03T18:00:00"
+    title: "DEF CON 570 Monthly Meetup"
+    location: "Rodano's, Wilkes-Barre, PA"
+    rsvp: "https://www.meetup.com/def-con-570/events/316449606/"
+    flyer: ""

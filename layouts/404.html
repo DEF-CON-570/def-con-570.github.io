@@ -1,0 +1,27 @@
+{{ define "main" }}
+<section class="dc-404">
+  <div class="dc-404__term" role="presentation">
+    <p class="dc-404__line"><span class="dc-prompt__sigil">$</span> locate <span id="dc-404-path">that page</span></p>
+    <p class="dc-404__err">locate: no such file or directory</p>
+    <p class="dc-404__line"><span class="dc-prompt__sigil">$</span> ls /<span class="dc-404__cursor" aria-hidden="true"></span></p>
+  </div>
+
+  <h1 class="dc-404__title">404</h1>
+  <p class="dc-404__lead">That page does not exist. Here is everything that does:</p>
+
+  <div class="dc-grid dc-grid-2">
+    <a class="dc-card dc-404__card" href="/"><span class="dc-card__title">Home</span></a>
+    <a class="dc-card dc-404__card" href="/about/"><span class="dc-card__title">About</span></a>
+    <a class="dc-card dc-404__card" href="/meetings/"><span class="dc-card__title">Meetings</span></a>
+    <a class="dc-card dc-404__card" href="/recordings/"><span class="dc-card__title">Recordings</span></a>
+    <a class="dc-card dc-404__card" href="/contact/"><span class="dc-card__title">Contact</span></a>
+  </div>
+</section>
+<script>
+  // Echo the path the visitor actually asked for, so the shell line is real.
+  (function () {
+    var el = document.getElementById("dc-404-path");
+    if (el && location && location.pathname) { el.textContent = location.pathname; }
+  })();
+</script>
+{{ end }}
