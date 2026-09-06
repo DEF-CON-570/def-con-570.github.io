@@ -1,0 +1,58 @@
+{{/* Renders the soonest upcoming meeting from data/meetups.yaml.
+
+     The file holds the whole schedule; we drop anything already past, sort what
+     remains by date, and show the first. Scheduling months ahead therefore means
+     the site advances on its own with no monthly edit.
+
+     The fallback matters as much as the card: if the schedule is empty, missing,
+     or entirely in the past, we point at Meetup rather than advertising a meeting
+     that already happened. A lapsed schedule degrades to "check Meetup" instead
+     of lying to a first-time visitor. */}}
+
+{{ $upcoming := slice }}
+{{ range (hugo.Data.meetups | default dict).meetings }}
+  {{/* Bind the meeting before entering `with`, which rebinds the dot to the date. */}}
+  {{ $meeting := . }}
+  {{ with .date }}
+    {{ $d := time.AsTime . }}
+    {{ if $d.After now }}
+      {{ $upcoming = $upcoming | append (dict "when" $d "meeting" $meeting) }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+{{ $sorted := sort $upcoming "when" }}
+
+{{ if gt (len $sorted) 0 }}
+  {{ $next := index $sorted 0 }}
+  {{ $m := $next.meeting }}
+  {{ $when := $next.when }}
+  <div class="next-meetup__card not-prose my-8 rounded-lg border border-neutral-300 p-6 dark:border-neutral-600">
+    <h2 class="mt-0 mb-4 text-2xl font-bold">Next meeting</h2>
+    {{ with $m.flyer }}
+      {{ with resources.Get . }}
+        <img src="{{ .RelPermalink }}" alt="" loading="lazy" class="mb-4 rounded-md">
+      {{ end }}
+    {{ end }}
+    <p class="text-lg">
+      <strong>{{ $when.Format "Monday, January 2, 2006" }}</strong>
+      &middot; {{ $when.Format "3:04 PM MST" }}
+      <span class="next-meetup__countdown"
+            data-dc-countdown="{{ $when.Format "2006-01-02T15:04:05Z07:00" }}"
+            hidden></span>
+    </p>
+    <p class="mt-1">{{ $m.title }}</p>
+    {{ with $m.location }}<p class="mt-1 opacity-80">{{ . }}</p>{{ end }}
+    {{ with $m.rsvp }}
+      <a class="mt-4 inline-block rounded-md border border-primary-400 px-4 py-2 no-underline transition hover:bg-primary-400 hover:text-neutral-900"
+         href="{{ . }}" rel="noopener noreferrer" target="_blank">RSVP on Meetup &rarr;</a>
+    {{ end }}
+  </div>
+{{ else }}
+  <div class="next-meetup__empty not-prose my-8 rounded-lg border border-neutral-300 p-6 dark:border-neutral-600">
+    <h2 class="mt-0 mb-4 text-2xl font-bold">Next meeting</h2>
+    <p>No meeting is on the calendar right now. Check
+      <a class="underline" href="{{ hugo.Data.links.meetup.url }}" rel="noopener noreferrer" target="_blank">our Meetup page</a>
+      for the latest, or ask in
+      <a class="underline" href="{{ hugo.Data.links.discord.url }}" rel="noopener noreferrer" target="_blank">Discord</a>.</p>
+  </div>
+{{ end }}

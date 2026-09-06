@@ -1,7 +1,7 @@
 # DEF CON 570 Site Expansion — Design
 
 **Date:** 2026-09-06
-**Status:** Approved for planning
+**Status:** Implemented
 **Repo:** `def-con-570.github.io`
 **Domain:** `defcon570.org`
 
@@ -240,3 +240,78 @@ the architecture.
 - Contact address for organizers (shared email, or Discord only)
 - Whether a code of conduct exists or needs drafting
 - Group tagline and the two-sentence "what we do" summary
+
+---
+
+## Implementation Notes
+
+Recorded after the build. Where the finished site differs from the design above,
+this section is authoritative.
+
+### Deviations from the design
+
+**Meeting data is a schedule, not a single entry.** The design specified
+`data/next_meetup.yaml` holding one meeting. It is instead `data/meetups.yaml`
+holding a `meetings` list; the partial filters out past dates, sorts the rest, and
+renders the soonest. Scheduling a year ahead means the site advances itself with no
+monthly edit, and the fallback appears only when the schedule genuinely runs out.
+Twelve months are seeded from the standing cadence (first Thursday, 6:00 PM) with
+correct EDT/EST offsets.
+
+**Colour scheme is custom, not a stock one.** Neither `forest` (turquoise) nor
+`terminal` suited the brief: `terminal` tints the *neutrals* green, so backgrounds,
+body text and borders all read green. `assets/css/schemes/dc570.css` uses a true
+grayscale ramp taken from the logo's `#000000`/`#f0f0f0`, with green confined to
+accents. It is a project file shadowing the theme's, so theme upgrades cannot
+overwrite it.
+
+**No email address anywhere.** The design assumed a published contact address. A
+plain `mailto:` is scraped, and obfuscation is not meaningfully effective, so the
+group decided against publishing one. Discord is primary, with Meetup as the
+fallback channel. A Cloudflare Email Routing alias remains the option if an address
+is ever needed.
+
+**A second third-party iframe.** The design permitted only the YouTube player. The
+Meetings page also embeds an OpenStreetMap frame showing the venue. OSM rather than
+Google Maps: no API key, no billing account, and no tracking cookies for visitors.
+Coordinates (41.2452997, -75.8822092) are geocoded, not estimated. Tiles are
+CSS-inverted to suit the dark theme.
+
+**Full-width pages.** About, Meetings and Contact use Blowfish's `simple` layout
+(`max-w-full`) rather than the prose-width default. That layout renders no table of
+contents, so those pages have none.
+
+**Presenting lives on Meetings, not Contact.** Both pages initially carried a call
+for speakers. Meetings owns it, so the invitation reaches people while they are
+already considering attending. Contact covers reaching the organisers and sponsors.
+
+**The homepage `h1` is visually hidden.** The site name appears in the header, so
+repeating it as a visible heading directly beneath was redundant. The `h1` remains
+in the document, clipped rather than `display: none`, preserving the heading
+landmark and the search signal.
+
+### Additions beyond the design
+
+- Custom terminal-styled 404 page that echoes the requested path.
+- Generated 1200x630 social share card (`assets/og-image.png`), wired through
+  `defaultSocialImage`. Note that `defaultFeaturedImage` is the wrong parameter for
+  this; it injects the image into article heroes.
+- Card components (`card-grid`, `card` shortcodes) styled in plain CSS. Blowfish
+  precompiles its Tailwind, so invented utility classes do not exist in the bundle.
+- A `link` shortcode resolving `data/links.yaml`, keeping inline link URLs
+  single-sourced with the buttons. Unknown keys fail the build.
+- Client-side countdown on the meeting card, so it cannot go stale between builds.
+- YouTube poster frames on talk cards, derived from the video id, no API key.
+- Scanlines, blinking cursors, hover states, nav marker, and a visible focus ring.
+  Every animation is disabled under `prefers-reduced-motion`; the focus ring exists
+  because the browser default is nearly invisible on a dark background.
+
+### Operational notes
+
+- **Restart `hugo server` after adding any file under `layouts/`.** Its watcher does
+  not reliably register new template files, and the symptom is raw `{{< ... >}}`
+  appearing on the page while CLI builds are fine.
+- **Do not run `hugo` while `hugo server` is running.** They fight over `public/`,
+  producing stale output and localhost URLs in absolute links.
+- **`rm -rf public resources` when a CSS or asset change appears to be missing.**
+  The resources cache is aggressive.

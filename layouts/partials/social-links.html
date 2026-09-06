@@ -1,0 +1,15 @@
+{{/* Renders every entry in data/links.yaml as an icon button.
+     Defined once so the homepage, contact page and anywhere else cannot drift.
+     Sorted by the `weight` field rather than alphabetically by key. */}}
+<div class="flex flex-wrap gap-3 my-6 not-prose">
+  {{ range sort hugo.Data.links "weight" }}
+    <a href="{{ .url }}"
+       rel="noopener noreferrer"
+       target="_blank"
+       title="{{ .blurb | default .name }}"
+       class="inline-flex items-center gap-2 rounded-md border border-neutral-300 px-4 py-2 no-underline transition hover:border-primary-400 hover:text-primary-400 dark:border-neutral-600">
+      <span class="w-5 h-5">{{ partial "icon.html" .icon }}</span>
+      <span>{{ .name }}</span>
+    </a>
+  {{ end }}
+</div>

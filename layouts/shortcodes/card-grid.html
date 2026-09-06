@@ -1,0 +1,4 @@
+{{/* Grid wrapper for {{< card >}} children. cols: 2 (default) or 3. */}}
+<div class="not-prose dc-grid dc-grid-{{ .Get "cols" | default "2" }}">
+  {{ .Inner | safeHTML }}
+</div>

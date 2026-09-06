@@ -1,0 +1,8 @@
+{{/* One card. icon = a name from the theme's icon set; title = heading. */}}
+<div class="dc-card">
+  <div class="dc-card__head">
+    {{ with .Get "icon" }}<span class="dc-card__icon">{{ partial "icon.html" . }}</span>{{ end }}
+    <h3 class="dc-card__title">{{ .Get "title" }}</h3>
+  </div>
+  <div class="dc-card__body">{{ .Inner | .Page.RenderString }}</div>
+</div>

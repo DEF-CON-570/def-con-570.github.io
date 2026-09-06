@@ -1,0 +1,9 @@
+{{/* Inline link pulled from data/links.yaml so URLs stay single-sourced.
+     Usage: {{< link discord >}} or {{< link discord "our Discord" >}} */}}
+{{- $key := .Get 0 -}}
+{{- $l := index hugo.Data.links $key -}}
+{{- if $l -}}
+<a href="{{ $l.url }}" rel="noopener noreferrer" target="_blank">{{ .Get 1 | default $l.name }}</a>
+{{- else -}}
+{{- errorf "link shortcode: no key %q in data/links.yaml" $key -}}
+{{- end -}}

@@ -1,0 +1,76 @@
+# Every scheduled meeting. The site renders only the soonest one that has not
+# happened yet, so it is safe -- and preferable -- to schedule months ahead.
+# Order does not matter; the template sorts by date. Past entries can stay as a
+# record or be deleted, whichever you prefer.
+#
+# When every date here has passed, the site shows a "check Meetup" fallback
+# instead of advertising a meeting that already happened. Top the list up
+# roughly once a year.
+#
+# `rsvp` currently points at the Meetup events list because the individual
+# events do not exist there yet. Once a meeting is posted on Meetup, replace it
+# with the event deep link: https://www.meetup.com/def-con-570/events/<id>/
+#
+# Generated from the standing cadence: first Thursday of every month, 6:00 PM.
+# Offsets follow US Eastern DST (-04:00 in summer, -05:00 in winter).
+meetings:
+  - date: 2026-10-01T18:00:00-04:00
+    title: "DEF CON 570 Monthly Meetup"
+    location: "Rodano's, Wilkes-Barre, PA"
+    rsvp: "https://www.meetup.com/def-con-570/events/"
+    flyer: ""
+  - date: 2026-11-05T18:00:00-05:00
+    title: "DEF CON 570 Monthly Meetup"
+    location: "Rodano's, Wilkes-Barre, PA"
+    rsvp: "https://www.meetup.com/def-con-570/events/"
+    flyer: ""
+  - date: 2026-12-03T18:00:00-05:00
+    title: "DEF CON 570 Monthly Meetup"
+    location: "Rodano's, Wilkes-Barre, PA"
+    rsvp: "https://www.meetup.com/def-con-570/events/"
+    flyer: ""
+  - date: 2027-01-07T18:00:00-05:00
+    title: "DEF CON 570 Monthly Meetup"
+    location: "Rodano's, Wilkes-Barre, PA"
+    rsvp: "https://www.meetup.com/def-con-570/events/"
+    flyer: ""
+  - date: 2027-02-04T18:00:00-05:00
+    title: "DEF CON 570 Monthly Meetup"
+    location: "Rodano's, Wilkes-Barre, PA"
+    rsvp: "https://www.meetup.com/def-con-570/events/"
+    flyer: ""
+  - date: 2027-03-04T18:00:00-05:00
+    title: "DEF CON 570 Monthly Meetup"
+    location: "Rodano's, Wilkes-Barre, PA"
+    rsvp: "https://www.meetup.com/def-con-570/events/"
+    flyer: ""
+  - date: 2027-04-01T18:00:00-04:00
+    title: "DEF CON 570 Monthly Meetup"
+    location: "Rodano's, Wilkes-Barre, PA"
+    rsvp: "https://www.meetup.com/def-con-570/events/"
+    flyer: ""
+  - date: 2027-05-06T18:00:00-04:00
+    title: "DEF CON 570 Monthly Meetup"
+    location: "Rodano's, Wilkes-Barre, PA"
+    rsvp: "https://www.meetup.com/def-con-570/events/"
+    flyer: ""
+  - date: 2027-06-03T18:00:00-04:00
+    title: "DEF CON 570 Monthly Meetup"
+    location: "Rodano's, Wilkes-Barre, PA"
+    rsvp: "https://www.meetup.com/def-con-570/events/"
+    flyer: ""
+  - date: 2027-07-01T18:00:00-04:00
+    title: "DEF CON 570 Monthly Meetup"
+    location: "Rodano's, Wilkes-Barre, PA"
+    rsvp: "https://www.meetup.com/def-con-570/events/"
+    flyer: ""
+  - date: 2027-08-05T18:00:00-04:00
+    title: "DEF CON 570 Monthly Meetup"
+    location: "Rodano's, Wilkes-Barre, PA"
+    rsvp: "https://www.meetup.com/def-con-570/events/"
+    flyer: ""
+  - date: 2027-09-02T18:00:00-04:00
+    title: "DEF CON 570 Monthly Meetup"
+    location: "Rodano's, Wilkes-Barre, PA"
+    rsvp: "https://www.meetup.com/def-con-570/events/"
+    flyer: ""

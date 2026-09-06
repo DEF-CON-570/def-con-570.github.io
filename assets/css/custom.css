@@ -1,0 +1,463 @@
+/* Carry over the terminal feel of the original site without its readability cost:
+   monospace for headings and the site name, normal body stack for prose. The old
+   site set Courier on <body>, which is the main thing that made it hard to read. */
+
+h1, h2, h3, h4,
+.font-headings,
+header a[href="/"] {
+  font-family: ui-monospace, "Cascadia Code", "Fira Code", "JetBrains Mono",
+               "Courier New", monospace;
+  letter-spacing: -0.02em;
+}
+
+/* --- Layout breathing room ------------------------------------------------
+   The site header sat almost flush against the page title. Applied to the
+   content wrapper rather than the h1, so it holds across every layout
+   (the `page` and `simple` layouts nest their headings differently). */
+main#main-content { padding-top: 2.25rem; }
+@media (max-width: 640px) {
+  main#main-content { padding-top: 1.5rem; }
+}
+
+/* --- Card grid ------------------------------------------------------------
+   Blowfish precompiles its Tailwind, so utility classes invented here would
+   not exist in the bundle. These are plain CSS so they always apply. */
+.dc-grid {
+  display: grid;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+@media (min-width: 640px) {
+  .dc-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dc-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+.dc-card {
+  border: 1px solid rgba(var(--color-neutral-300), 1);
+  border-radius: 0.5rem;
+  padding: 1.15rem 1.25rem;
+  transition: border-color 0.2s ease;
+}
+:root:not([data-theme="light"]) .dc-card,
+[data-theme="dark"] .dc-card {
+  border-color: rgba(var(--color-neutral-700), 1);
+}
+.dc-card:hover { border-color: rgba(var(--color-primary-400), 0.7); }
+
+.dc-card__head {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.45rem;
+}
+.dc-card__icon {
+  display: inline-flex;
+  width: 1.15rem;
+  height: 1.15rem;
+  color: rgba(var(--color-primary-400), 1);
+  flex: none;
+}
+.dc-card__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.dc-card__body { font-size: 0.95rem; opacity: 0.9; }
+.dc-card__body > :first-child { margin-top: 0; }
+.dc-card__body > :last-child { margin-bottom: 0; }
+
+/* --- Contrast -------------------------------------------------------------
+   Border-only cards on a flat background read as a wall of text. Cards now sit
+   on a raised surface, and the next-meeting block is deliberately the loudest
+   thing on the page because it carries the one action we want. */
+.dc-card { background: rgba(var(--color-neutral-100), 0.55); }
+:root:not([data-theme="light"]) .dc-card,
+[data-theme="dark"] .dc-card { background: rgba(var(--color-neutral-800), 0.55); }
+
+.next-meetup__card,
+.next-meetup__empty {
+  background: rgba(var(--color-neutral-100), 0.7);
+  border-left: 3px solid rgba(var(--color-primary-400), 1);
+}
+:root:not([data-theme="light"]) .next-meetup__card,
+:root:not([data-theme="light"]) .next-meetup__empty,
+[data-theme="dark"] .next-meetup__card,
+[data-theme="dark"] .next-meetup__empty {
+  background: rgba(var(--color-neutral-800), 0.7);
+}
+.next-meetup__card h2,
+.next-meetup__empty h2 {
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+/* Section headings get a short green rule so sections read as sections. */
+.prose h2 {
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid rgba(var(--color-neutral-300), 0.6);
+}
+:root:not([data-theme="light"]) .prose h2,
+[data-theme="dark"] .prose h2 {
+  border-bottom-color: rgba(var(--color-neutral-700), 0.8);
+}
+
+/* The terminal prompt sigil carries the accent. */
+.dc-prompt__sigil { color: rgba(var(--color-primary-400), 1); font-weight: 700; }
+
+/* --- Feature cards --------------------------------------------------------
+   The 2-up grid carries the pitch, so it gets more design than the plain
+   3-up facts strip: icons sit in tinted tiles, cards are numbered via a CSS
+   counter (no markup change), and they lift on hover. */
+.dc-card { position: relative; }
+
+.dc-card__icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.5rem;
+  background: rgba(var(--color-primary-400), 0.14);
+  align-items: center;
+  justify-content: center;
+}
+.dc-card__icon .icon { display: block; width: 1.15rem; height: 1.15rem; }
+.dc-card__icon svg { width: 100%; height: 100%; }
+.dc-card__head { gap: 0.7rem; margin-bottom: 0.7rem; }
+.dc-card__title { font-size: 1.15rem; }
+
+.dc-grid-2 { counter-reset: dccard; }
+.dc-grid-2 .dc-card { padding-top: 1.35rem; }
+.dc-grid-2 .dc-card::after {
+  counter-increment: dccard;
+  content: "0" counter(dccard);
+  position: absolute;
+  top: 0.7rem;
+  right: 0.9rem;
+  font-family: ui-monospace, "Cascadia Code", "Courier New", monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  opacity: 0.35;
+}
+
+.dc-card {
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.dc-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -12px rgba(0, 0, 0, 0.55);
+}
+.dc-card:hover .dc-card__icon {
+  background: rgba(var(--color-primary-400), 0.25);
+}
+
+/* Section heading gets a terminal-style green marker. */
+.prose h2::before {
+  content: "> ";
+  color: rgba(var(--color-primary-400), 1);
+  font-family: ui-monospace, "Cascadia Code", "Courier New", monospace;
+}
+/* Component headings (meeting card) are not section headings, so no marker
+   and no section rule. */
+.not-prose h2::before { content: none; }
+.not-prose h2 { padding-bottom: 0; border-bottom: 0; }
+
+/* --- Terminal prompt ------------------------------------------------------ */
+.dc-prompt { margin: 1.5rem 0; font-family: ui-monospace, "Cascadia Code", "Fira Code", "Courier New", monospace; }
+.dc-prompt__cmd { font-size: 1.15rem; opacity: 0.9; }
+.dc-prompt__sigil { color: rgba(var(--color-primary-400), 1); font-weight: 700; }
+.dc-prompt__out {
+  margin-top: 0.35rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  /* Faint phosphor glow. Kept low so it never costs legibility. */
+  text-shadow: 0 0 22px rgba(var(--color-primary-400), 0.18);
+}
+@media (min-width: 640px) {
+  .dc-prompt__cmd { font-size: 1.4rem; }
+  .dc-prompt__out { font-size: 1.75rem; }
+}
+.dc-prompt__cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1.05em;
+  margin-left: 0.15em;
+  vertical-align: -0.16em;
+  background: rgba(var(--color-primary-400), 1);
+  animation: dc-blink 1.1s step-end infinite;
+}
+@keyframes dc-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .dc-prompt__cursor { animation: none; opacity: 0.9; }
+  .dc-card { transition: none; }
+  .dc-card:hover { transform: none; }
+}
+
+/* --- Ambient terminal texture --------------------------------------------
+   Very low-opacity scanlines. Purely decorative, never over content. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(var(--color-primary-400), 0.05) 0px,
+    rgba(var(--color-primary-400), 0.05) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  opacity: 0.5;
+}
+:root[data-theme="light"] body::before { opacity: 0.18; }
+
+/* Green selection, because of course. */
+::selection {
+  background: rgba(var(--color-primary-400), 0.3);
+  color: rgba(var(--color-neutral), 1);
+}
+
+/* --- Embedded map --------------------------------------------------------- */
+.dc-map { margin: 1.5rem 0; }
+.dc-map__frame {
+  display: block;
+  width: 100%;
+  height: 320px;
+  border: 1px solid rgba(var(--color-neutral-700), 1);
+  border-radius: 0.5rem;
+  /* OSM tiles are light. Invert and rotate the hue so the map reads as dark
+     without shipping a tile server or an API key. */
+  filter: invert(0.92) hue-rotate(180deg) contrast(0.9) brightness(0.95);
+}
+:root[data-theme="light"] .dc-map__frame { filter: none; }
+.dc-map__links {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  display: flex;
+  gap: 0.5rem;
+  opacity: 0.85;
+}
+
+/* --- Homepage title -------------------------------------------------------
+   The site name is already in the header, so repeating it as a visible h1
+   directly beneath is noise. Hide it visually but keep it in the document:
+   removing it entirely would leave the homepage with no h1, costing the
+   heading landmark screen readers navigate by and the search signal for the
+   group's own name.
+
+   Scoped to `article.prose`, which the `page` layout uses (the homepage). The
+   other pages use the `simple` layout and keep their visible titles. */
+main#main-content > article.prose > header:first-child h1 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* With the homepage h1 visually hidden, its <header> wrapper and the prompt's
+   own top margin stack into a large empty band. Collapse both so the prompt
+   sits where the title would have. */
+main#main-content > article.prose > header:first-child {
+  margin: 0;
+  padding: 0;
+  height: 0;
+}
+main#main-content > article.prose > section > .dc-prompt:first-child {
+  margin-top: 0;
+}
+
+/* --- Hero watermark -------------------------------------------------------
+   The logo, large and faint, behind the homepage hero. Decorative only. */
+main#main-content > article.prose > section {
+  position: relative;
+}
+main#main-content > article.prose > section::before {
+  content: "";
+  position: absolute;
+  top: -2.25rem;
+  right: -1.25rem;
+  width: 16rem;
+  height: 16rem;
+  background: url("/logo.png") no-repeat center / contain;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 0;
+}
+main#main-content > article.prose > section > * { position: relative; z-index: 1; }
+@media (max-width: 900px) {
+  main#main-content > article.prose > section::before { display: none; }
+}
+
+/* --- Meeting countdown ---------------------------------------------------- */
+.next-meetup__countdown {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.05rem 0.5rem;
+  border-radius: 0.3rem;
+  background: rgba(var(--color-primary-400), 0.16);
+  color: rgba(var(--color-primary-400), 1);
+  font-family: ui-monospace, "Cascadia Code", "Courier New", monospace;
+  font-size: 0.8rem;
+  vertical-align: 0.12em;
+}
+
+/* --- Talk thumbnails ------------------------------------------------------ */
+.dc-talk__thumb { display: block; margin: -0.35rem 0 0.9rem; }
+.dc-talk__thumb img {
+  width: 100%;
+  height: auto;
+  border-radius: 0.4rem;
+  border: 1px solid rgba(var(--color-neutral-700), 1);
+}
+
+/* --- Footer sign-off ------------------------------------------------------ */
+.dc-footer-prompt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  font-family: ui-monospace, "Cascadia Code", "Courier New", monospace;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+.dc-footer-prompt__out { margin-left: 0.4rem; }
+.dc-footer-prompt__attr a:hover { text-decoration: underline; }
+
+/* --- 404 ------------------------------------------------------------------ */
+.dc-404 { max-width: 46rem; }
+.dc-404__term {
+  font-family: ui-monospace, "Cascadia Code", "Courier New", monospace;
+  font-size: 0.95rem;
+  border: 1px solid rgba(var(--color-neutral-700), 1);
+  border-left: 3px solid rgba(var(--color-primary-400), 1);
+  border-radius: 0.5rem;
+  padding: 1rem 1.15rem;
+  background: rgba(var(--color-neutral-800), 0.55);
+}
+.dc-404__line { margin: 0.15rem 0; }
+.dc-404__err { margin: 0.15rem 0; opacity: 0.7; }
+.dc-404__cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  vertical-align: -0.14em;
+  background: rgba(var(--color-primary-400), 1);
+  animation: dc-blink 1.1s step-end infinite;
+}
+.dc-404__title {
+  margin: 2rem 0 0.25rem;
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.dc-404__lead { margin: 0 0 0.5rem; opacity: 0.85; }
+.dc-404__card { text-decoration: none; display: block; }
+@media (prefers-reduced-motion: reduce) { .dc-404__cursor { animation: none; } }
+
+/* --- Scrollbar ------------------------------------------------------------ */
+html { scrollbar-width: thin; scrollbar-color: rgba(var(--color-primary-600), 0.8) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--color-primary-600), 0.75);
+  border-radius: 6px;
+  border: 2px solid rgba(var(--color-neutral-900), 1);
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(var(--color-primary-400), 0.9); }
+
+/* --- Navigation ----------------------------------------------------------
+   `highlightCurrentMenuArea` tags spans inside the current page's link with
+   .active; the theme ships no styling for it. */
+.main-menu span.active {
+  color: rgba(var(--color-primary-400), 1);
+  font-weight: 700;
+}
+
+/* A green prompt fades in before a nav link on hover, echoing the section
+   headings. Absolutely positioned so it occupies no layout space: an inline
+   marker widened the link and shoved every sibling sideways on hover.
+   Excludes the logo link (href="/"). */
+.main-menu a[href^="/"]:not([href="/"]) { position: relative; }
+.main-menu a[href^="/"]:not([href="/"])::before {
+  content: ">";
+  position: absolute;
+  right: 100%;
+  margin-right: 0.15em;
+  color: rgba(var(--color-primary-400), 1);
+  font-family: ui-monospace, "Cascadia Code", "Courier New", monospace;
+  opacity: 0;
+  transform: translateX(3px);
+  pointer-events: none;
+  transition: opacity 0.16s ease, transform 0.16s ease;
+}
+.main-menu a[href^="/"]:not([href="/"]):hover::before {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* --- Micro-interactions --------------------------------------------------- */
+header img.logo {
+  transition: filter 0.25s ease, transform 0.25s ease;
+}
+header a:hover img.logo {
+  filter: drop-shadow(0 0 10px rgba(var(--color-primary-400), 0.55));
+  transform: translateY(-1px);
+}
+
+.dc-map__frame { transition: filter 0.3s ease, border-color 0.3s ease; }
+.dc-map:hover .dc-map__frame {
+  filter: invert(0.88) hue-rotate(180deg) contrast(0.95) brightness(1.05);
+  border-color: rgba(var(--color-primary-400), 0.7);
+}
+
+.next-meetup__card a[href*="meetup.com"] {
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.next-meetup__card a[href*="meetup.com"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -12px rgba(var(--color-primary-400), 0.8);
+}
+
+.dc-grid-2 .dc-card::after { transition: color 0.2s ease, opacity 0.2s ease; }
+.dc-grid-2 .dc-card:hover::after {
+  color: rgba(var(--color-primary-400), 1);
+  opacity: 0.9;
+}
+
+/* --- Focus ---------------------------------------------------------------
+   The browser default focus ring is nearly invisible on this background, so
+   keyboard users had no reliable indicator. */
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible,
+summary:focus-visible {
+  outline: 2px solid rgba(var(--color-primary-400), 1);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* --- Tagline scramble ----------------------------------------------------- */
+.dc-prompt__out { cursor: default; }
+
+@media (prefers-reduced-motion: reduce) {
+  .main-menu a[href^="/"]:not([href="/"])::before,
+  header img.logo,
+  .dc-map__frame,
+  .next-meetup__card a[href*="meetup.com"] { transition: none; }
+  .next-meetup__card a[href*="meetup.com"]:hover,
+  header a:hover img.logo { transform: none; }
+}
+
+/* Nav items sat a little tight, especially with the hover marker sitting in
+   the gap. Theme default is gap-x-5 (1.25rem). */
+.main-menu nav { column-gap: 1.85rem; }
