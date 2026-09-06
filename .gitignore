@@ -1,0 +1,17 @@
+# Hugo build output
+/public/
+/resources/_gen/
+/.hugo_build.lock
+hugo_stats.json
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local tooling
+.claude/
+CLAUDE.md
+.env
+.env.local
