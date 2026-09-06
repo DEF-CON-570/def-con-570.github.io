@@ -486,3 +486,13 @@ summary:focus-visible {
   text-decoration: none;
 }
 .dc-dates__rsvp:hover { text-decoration: underline; }
+
+/* --- Scrollbar gutter -----------------------------------------------------
+   Short pages have no scrollbar and tall ones do, so centred content shifted
+   sideways when moving between them. Reserving the gutter on every page keeps
+   the layout still. `overflow-y: scroll` is the fallback for browsers without
+   scrollbar-gutter; it reserves the space by always drawing the track. */
+html { scrollbar-gutter: stable; }
+@supports not (scrollbar-gutter: stable) {
+  html { overflow-y: scroll; }
+}
