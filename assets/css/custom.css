@@ -282,10 +282,10 @@ main#main-content > article.prose > section {
 main#main-content > article.prose > section::before {
   content: "";
   position: absolute;
-  top: -2.25rem;
-  right: -1.25rem;
-  width: 16rem;
-  height: 16rem;
+  top: -1.8rem;
+  right: -1rem;
+  width: 13rem;
+  height: 13rem;
   background: url("/logo.png") no-repeat center / contain;
   opacity: 0.04;
   pointer-events: none;
