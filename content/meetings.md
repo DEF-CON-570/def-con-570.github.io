@@ -8,15 +8,17 @@ layout: "simple"
 
 ## When and where
 
-We meet on the **first Thursday of every month at 6:00 PM**.
+We meet on the **{{< cadence >}}**.
 
-**Rodano's**<br>
-53 Public Square<br>
-Wilkes-Barre, PA 18701
+{{< venue >}}
 
-Street parking is available, and there are parking garages nearby.
+{{< parking >}}
 
-{{< map lat="41.2452997" lon="-75.8822092" label="Rodano's, 53 Public Square, Wilkes-Barre" >}}
+{{< map >}}
+
+## Upcoming dates
+
+{{< upcoming-meetings limit="5" >}}
 
 ## What it costs
 

@@ -11,6 +11,7 @@ Thumbs.db
 .idea/
 
 # Local tooling
+docs/plans/
 .claude/
 CLAUDE.md
 .env

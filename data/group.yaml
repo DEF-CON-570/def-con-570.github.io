@@ -1,0 +1,18 @@
+# Group facts used across the site. Edit here and every page follows.
+#
+# Consumed by the {{< cadence >}}, {{< venue >}} and {{< map >}} shortcodes on
+# the homepage and the meetings page.
+cadence: "first Thursday of every month"
+time: "6:00 PM"
+cost: "No cost, no membership, no age limit."
+
+venue:
+  name: "Rodano's"
+  street: "53 Public Square"
+  city: "Wilkes-Barre"
+  state: "PA"
+  zip: "18701"
+  # Geocoded from the address; used by the embedded map.
+  lat: 41.2452997
+  lon: -75.8822092
+  parking: "Street parking is available, and there are parking garages nearby."

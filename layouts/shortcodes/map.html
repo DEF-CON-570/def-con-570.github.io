@@ -5,10 +5,11 @@
      coordinates.
 
      Usage: {{< map lat="41.2453" lon="-75.8822" label="Rodano's" >}} */}}
-{{- $lat := float (.Get "lat") -}}
-{{- $lon := float (.Get "lon") -}}
+{{- $v := hugo.Data.group.venue -}}
+{{- $lat := float (.Get "lat" | default $v.lat) -}}
+{{- $lon := float (.Get "lon" | default $v.lon) -}}
 {{- $pad := float (.Get "pad" | default 0.0035) -}}
-{{- $label := .Get "label" | default "Meeting location" -}}
+{{- $label := .Get "label" | default (printf "%s, %s, %s" $v.name $v.street $v.city) -}}
 {{- $bbox := printf "%.5f,%.5f,%.5f,%.5f" (sub $lon $pad) (sub $lat (div $pad 2.0)) (add $lon $pad) (add $lat (div $pad 2.0)) -}}
 <div class="dc-map not-prose">
   <iframe

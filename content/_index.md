@@ -23,8 +23,8 @@ to work in security, and you do not need to know anything yet.
 ## Where we meet
 
 {{< card-grid cols="3" >}}
-{{< card icon="bell" title="First Thursdays" >}}Every month at 6:00 PM.{{< /card >}}
-{{< card icon="location-dot" title="Rodano's" >}}53 Public Square, Wilkes-Barre.{{< /card >}}
-{{< card icon="mug-hot" title="Free" >}}No cost, no membership, no age limit.{{< /card >}}
+{{< card icon="bell" title="Monthly" >}}The {{< cadence >}}.{{< /card >}}
+{{< card icon="location-dot" title="Rodano's" >}}{{< venue style="short" >}}.{{< /card >}}
+{{< card icon="mug-hot" title="Free" >}}{{< cost >}}{{< /card >}}
 {{< /card-grid >}}
 

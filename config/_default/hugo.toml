@@ -5,6 +5,9 @@
 theme = "blowfish"
 baseURL = "https://defcon570.org/"
 defaultContentLanguage = "en"
+# Meeting times in data/meetups.yaml are written as local wall-clock time with
+# no offset; this makes Hugo interpret them here, so DST is handled for us.
+timeZone = "America/New_York"
 
 # pluralizeListTitles = "true" # hugo function useful for non-english languages, find out more in  https://gohugo.io/getting-started/configuration/#pluralizelisttitles
 
