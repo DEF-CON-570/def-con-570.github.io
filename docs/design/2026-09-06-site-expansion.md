@@ -89,7 +89,23 @@ proxied in front of GitHub Pages. No registrar or nameserver change is required.
 The repo name `def-con-570.github.io` becomes a misnomer after the move. Harmless;
 rename only if desired.
 
-Local development: `hugo server -D`, with Hugo installed via `winget install Hugo.Hugo.Extended`.
+### Development Workflow
+
+Nothing reaches the repository before it has been looked at. The order is fixed:
+
+1. Build locally and review at `http://localhost:1313` via `hugo server -D`, which live
+   reloads on save and renders draft content.
+2. Commit only after the change has been reviewed and approved locally.
+3. Push to a branch, open a pull request, and confirm the Cloudflare Pages preview URL.
+4. Merge to `main`, which publishes to production.
+
+The Cloudflare preview deploy is a second check against build-environment differences,
+not a replacement for the local one. Prerequisite: Hugo extended, installed with
+`winget install Hugo.Hugo.Extended`.
+
+Commit messages describe the change and its reasoning. They carry no tool-authorship
+trailers, and no editor or assistant configuration files are committed; `.gitignore`
+excludes them along with Hugo build output.
 
 ## Content Structure
 
