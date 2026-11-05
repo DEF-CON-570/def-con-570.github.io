@@ -15,11 +15,6 @@
 #   https://www.meetup.com/def-con-570/events/<id>/
 # Until then it points at the events list.
 meetings:
-  - date: "2026-10-01T18:00:00"
-    title: "DEF CON 570 Monthly Meetup"
-    location: "Rodano's, Wilkes-Barre, PA"
-    rsvp: "https://www.meetup.com/def-con-570/events/316448170/"
-    flyer: ""
   - date: "2026-11-05T18:00:00"
     title: "DEF CON 570 Monthly Meetup"
     location: "Rodano's, Wilkes-Barre, PA"
