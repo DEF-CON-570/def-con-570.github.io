@@ -38,10 +38,12 @@
         <span class="dc-dates__time">{{ $row.when.Format "3:04 PM" }}</span>
         {{ with $row.meeting.rsvp }}
           <a class="dc-dates__rsvp" href="{{ . }}" rel="noopener noreferrer" target="_blank">RSVP</a>
+        {{ else }}
+          <span class="dc-dates__rsvp dc-dates__rsvp--pending">not posted yet</span>
         {{ end }}
       </li>
     {{ end }}
   </ul>
   <p data-dc-empty{{ if $shown }} hidden{{ end }}>Nothing on the calendar yet. We meet on the {{ hugo.Data.group.cadence }}, so dates
-    will appear here as they are confirmed.</p>
+    will appear here as they're confirmed.</p>
 </div>

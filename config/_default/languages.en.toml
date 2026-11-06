@@ -11,7 +11,7 @@ title = "DEF CON 570"
   dateFormat = "January 2, 2006"
   logo = "logo.png"
   # secondaryLogo = "img/secondary-logo.png"
-  description = "DEF CON Group 570, the hacker, maker, and security community for area code 570."
+  description = "DEF CON Group 570, the hacker, maker, and security community for area code 570 in northeastern Pennsylvania."
   copyright = "DEF CON Group 570"
 
 # [params.author]

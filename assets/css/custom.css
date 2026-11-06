@@ -4,6 +4,7 @@
 
 h1, h2, h3, h4,
 .font-headings,
+.dc-card__title,
 header a[href="/"] {
   font-family: ui-monospace, "Cascadia Code", "Fira Code", "JetBrains Mono",
                "Courier New", monospace;
@@ -42,7 +43,7 @@ main#main-content { padding-top: 2.25rem; }
 [data-theme="dark"] .dc-card {
   border-color: rgba(var(--color-neutral-700), 1);
 }
-.dc-card:hover { border-color: rgba(var(--color-primary-400), 0.7); }
+a.dc-card:hover { border-color: rgba(var(--color-primary-400), 0.7); }
 
 .dc-card__head {
   display: flex;
@@ -66,6 +67,14 @@ main#main-content { padding-top: 2.25rem; }
 .dc-card__body { font-size: 0.95rem; opacity: 0.9; }
 .dc-card__body > :first-child { margin-top: 0; }
 .dc-card__body > :last-child { margin-bottom: 0; }
+/* Cards opt out of prose styling, so links inside them need their own. */
+.dc-card__body a {
+  display: inline-block;
+  margin-top: 0.35rem;
+  color: rgba(var(--color-primary-400), 1);
+  text-decoration: none;
+}
+.dc-card__body a:hover { text-decoration: underline; }
 
 /* --- Contrast -------------------------------------------------------------
    Border-only cards on a flat background read as a wall of text. Cards now sit
@@ -109,8 +118,9 @@ main#main-content { padding-top: 2.25rem; }
 
 /* --- Feature cards --------------------------------------------------------
    The 2-up grid carries the pitch, so it gets more design than the plain
-   3-up facts strip: icons sit in tinted tiles, cards are numbered via a CSS
-   counter (no markup change), and they lift on hover. */
+   3-up facts strip: icons sit in tinted tiles. Only cards that are links
+   (a.dc-card) react to hover; static cards stay still so they do not look
+   clickable. */
 .dc-card { position: relative; }
 
 .dc-card__icon {
@@ -126,28 +136,14 @@ main#main-content { padding-top: 2.25rem; }
 .dc-card__head { gap: 0.7rem; margin-bottom: 0.7rem; }
 .dc-card__title { font-size: 1.15rem; }
 
-.dc-grid-2 { counter-reset: dccard; }
-.dc-grid-2 .dc-card { padding-top: 1.35rem; }
-.dc-grid-2 .dc-card::after {
-  counter-increment: dccard;
-  content: "0" counter(dccard);
-  position: absolute;
-  top: 0.7rem;
-  right: 0.9rem;
-  font-family: ui-monospace, "Cascadia Code", "Courier New", monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  opacity: 0.35;
-}
-
 .dc-card {
   transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
-.dc-card:hover {
+a.dc-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px -12px rgba(0, 0, 0, 0.55);
 }
-.dc-card:hover .dc-card__icon {
+a.dc-card:hover .dc-card__icon {
   background: rgba(var(--color-primary-400), 0.25);
 }
 
@@ -192,7 +188,7 @@ main#main-content { padding-top: 2.25rem; }
 @media (prefers-reduced-motion: reduce) {
   .dc-prompt__cursor { animation: none; opacity: 0.9; }
   .dc-card { transition: none; }
-  .dc-card:hover { transform: none; }
+  a.dc-card:hover { transform: none; }
 }
 
 /* --- Ambient terminal texture --------------------------------------------
@@ -361,13 +357,21 @@ main#main-content > article.prose > section > * { position: relative; z-index: 1
   animation: dc-blink 1.1s step-end infinite;
 }
 .dc-404__title {
-  margin: 2rem 0 0.25rem;
+  margin: 2rem 0 0.75rem;
   font-size: 3.5rem;
+  line-height: 1.1;
   font-weight: 800;
   letter-spacing: -0.03em;
 }
 .dc-404__lead { margin: 0 0 0.5rem; opacity: 0.85; }
-.dc-404__card { text-decoration: none; display: block; }
+/* Link cards (404 page, social links): a whole card that is one link. Spans
+   inside an <a>, so the head and body need block-level display set here. */
+.dc-card--link { text-decoration: none; display: block; color: inherit; }
+.dc-card--link .dc-card__head { display: flex; }
+.dc-card--link .dc-card__body { display: block; margin: 0; }
+/* Titles otherwise inherit the muted body-text colour of whatever page they
+   sit on; pin them to the heading colour so every link card matches. */
+.dark .dc-card--link .dc-card__title { color: rgba(var(--color-neutral-50), 1); }
 @media (prefers-reduced-motion: reduce) { .dc-404__cursor { animation: none; } }
 
 /* --- Scrollbar ------------------------------------------------------------ */
@@ -435,11 +439,6 @@ header a:hover img.logo {
   box-shadow: 0 8px 20px -12px rgba(var(--color-primary-400), 0.8);
 }
 
-.dc-grid-2 .dc-card::after { transition: color 0.2s ease, opacity 0.2s ease; }
-.dc-grid-2 .dc-card:hover::after {
-  color: rgba(var(--color-primary-400), 1);
-  opacity: 0.9;
-}
 
 /* --- Focus ---------------------------------------------------------------
    The browser default focus ring is nearly invisible on this background, so
@@ -482,6 +481,7 @@ summary:focus-visible {
 .dc-dates__row:last-child { border-bottom: 0; }
 .dc-dates__date { font-weight: 600; }
 .dc-dates__time {
+  white-space: nowrap;
   font-family: ui-monospace, "Cascadia Code", "Courier New", monospace;
   font-size: 0.85rem;
   opacity: 0.7;
@@ -493,6 +493,8 @@ summary:focus-visible {
   text-decoration: none;
 }
 .dc-dates__rsvp:hover { text-decoration: underline; }
+.dc-dates__rsvp--pending { color: inherit; opacity: 0.5; font-style: italic; }
+.dc-dates__rsvp--pending:hover { text-decoration: none; }
 
 /* --- Scrollbar gutter -----------------------------------------------------
    Short pages have no scrollbar and tall ones do, so centred content shifted
@@ -502,4 +504,127 @@ summary:focus-visible {
 html { scrollbar-gutter: stable; }
 @supports not (scrollbar-gutter: stable) {
   html { overflow-y: scroll; }
+}
+
+/* --- Meeting photos ------------------------------------------------------- */
+.dc-photos { margin: 1.75rem 0 2.25rem; }
+.dc-photos--grid { display: grid; gap: 1rem; }
+@media (min-width: 640px) {
+  .dc-photos--cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dc-photos--cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.dc-photos__item { margin: 0; }
+.dc-photos__item img,
+.dc-photos__ph {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(var(--color-neutral-700), 1);
+}
+.dc-photos__item figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+/* Preview-only placeholder (hugo server, no photos listed). */
+.dc-photos__ph {
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-style: dashed;
+  font-family: ui-monospace, "Cascadia Code", "Courier New", monospace;
+  font-size: 0.85rem;
+  opacity: 0.5;
+}
+
+/* --- Organizers ----------------------------------------------------------- */
+.dc-org__head { display: flex; align-items: center; gap: 0.9rem; }
+.dc-org__avatar {
+  flex: none;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 9999px;
+  object-fit: cover;
+  border: 2px solid rgba(var(--color-primary-400), 0.6);
+}
+.dc-org__initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--color-primary-400), 0.14);
+  color: rgba(var(--color-primary-400), 1);
+  font-family: ui-monospace, "Cascadia Code", "Courier New", monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.dc-org__name { margin: 0; font-size: 1.15rem; font-weight: 700; line-height: 1.2; }
+.dc-org__meta {
+  margin: 0.3rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.6rem;
+  align-items: baseline;
+}
+.dc-org__realname {
+  font-family: ui-monospace, "Cascadia Code", "Courier New", monospace;
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+.dc-org__role {
+  font-family: ui-monospace, "Cascadia Code", "Courier New", monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(var(--color-primary-400), 1);
+}
+.dc-org__bio { margin: 0.9rem 0 0; font-size: 0.95rem; opacity: 0.9; }
+.dc-org__bio--ph { font-style: italic; opacity: 0.45; }
+.dc-org__links { display: flex; gap: 0.75rem; margin-top: 0.9rem; }
+.dc-org__links a {
+  display: inline-flex;
+  width: 1.15rem;
+  height: 1.15rem;
+  opacity: 0.75;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+.dc-org__links a:hover { opacity: 1; color: rgba(var(--color-primary-400), 1); }
+.dc-org__links svg { width: 100%; height: 100%; }
+
+/* Prose caps line length; inside a full-width box that leaves a ragged gap. */
+.dc-prose-full { max-width: none; }
+
+/* --- Homepage fact strip -------------------------------------------------- */
+.dc-facts {
+  list-style: none;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.75rem;
+  font-size: 0.95rem;
+}
+.dc-facts li { display: inline-flex; align-items: center; gap: 0.5rem; margin: 0; }
+.dc-facts__icon {
+  display: inline-flex;
+  width: 1rem;
+  height: 1rem;
+  color: rgba(var(--color-primary-400), 1);
+}
+.dc-facts__icon svg { width: 100%; height: 100%; }
+.dc-facts a { color: rgba(var(--color-primary-400), 1); text-decoration: none; }
+.dc-facts a:hover { text-decoration: underline; }
+
+/* Keeps short runs like "6:00 PM EST" from splitting across lines. */
+.dc-nowrap { white-space: nowrap; }
+
+/* An address shown on a link card (the email card), so it can be read and
+   copied without opening the mail app. */
+.dc-card__address {
+  margin-top: 0.4rem !important;
+  font-family: ui-monospace, "Cascadia Code", "Courier New", monospace;
+  font-size: 0.85rem;
+  color: rgba(var(--color-primary-400), 1);
+  word-break: break-all;
 }

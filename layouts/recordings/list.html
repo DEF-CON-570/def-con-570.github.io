@@ -1,7 +1,7 @@
 {{ define "main" }}
 <header class="max-w-prose">
   <h1 class="mt-0 text-4xl font-extrabold">{{ .Title }}</h1>
-  <div class="prose dark:prose-invert">{{ .Content }}</div>
+  <div class="prose dark:prose-invert mt-4">{{ .Content }}</div>
 </header>
 
 {{ $talks := .Pages }}
@@ -35,9 +35,13 @@
        reader somewhere useful instead. */}}
   <section class="mt-8 rounded-lg border border-neutral-300 p-6 dark:border-neutral-600">
     <h2 class="mt-0 text-2xl font-bold">Nothing here yet</h2>
-    <p class="mt-2">We are just getting started with recording talks. Check back after
-      the next meeting, or better yet,
-      <a class="underline hover:text-primary-400" href="/meetings/">come see one in person</a>.</p>
+    {{/* Same prose styling as the intro above, so the empty state does not
+         read louder than the page's own description. */}}
+    <div class="prose dark:prose-invert mt-2 dc-prose-full">
+      <p class="my-0">We're just getting started with recording talks. Check back after
+        the next meeting, or better yet,
+        <a href="/meetings/">come see one in person</a>.</p>
+    </div>
   </section>
 {{ end }}
 {{ end }}
