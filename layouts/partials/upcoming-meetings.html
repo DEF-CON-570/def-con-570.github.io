@@ -4,38 +4,44 @@
      of the soonest to omit, default 0). The list includes the next meeting even
      though the card above repeats it, so it reads as a complete schedule.
 
-     Same filter-and-sort as next-meetup.html: past dates are dropped, the rest
-     ordered soonest first. */}}
-{{ $limit := .limit | default 5 }}
-{{ $skip := .skip | default 0 }}
+     Same filter-and-sort as next-meetup.html: meetings whose day is over are
+     dropped (a meeting stays listed through the end of its day), the rest
+     ordered soonest first. As there, every upcoming date is rendered and the
+     schedule script in extend-footer.html re-applies skip and limit against the
+     visitor's clock, so a stale build cannot list a meeting that has passed.
+     The build-time window is what shows without JS. */}}
+{{/* Shortcode params arrive as strings ("5"); arithmetic below needs ints. */}}
+{{ $limit := int (.limit | default 5) }}
+{{ $skip := int (.skip | default 0) }}
 
 {{ $upcoming := slice }}
 {{ range (hugo.Data.meetups | default dict).meetings }}
   {{ $meeting := . }}
   {{ with .date }}
     {{ $d := time.AsTime . }}
-    {{ if $d.After now }}
-      {{ $upcoming = $upcoming | append (dict "when" $d "meeting" $meeting) }}
+    {{ $until := (time.AsTime ($d.Format "2006-01-02")).AddDate 0 0 1 }}
+    {{ if $until.After now }}
+      {{ $upcoming = $upcoming | append (dict "when" $d "until" $until "meeting" $meeting) }}
     {{ end }}
   {{ end }}
 {{ end }}
 {{ $sorted := sort $upcoming "when" }}
-{{ $rest := after $skip $sorted }}
-{{ $shown := first (math.Min $limit (len $rest)) $rest }}
+{{ $shown := gt (len $sorted) $skip }}
 
-{{ if $shown }}
-  <ul class="dc-dates not-prose">
-    {{ range $shown }}
-      <li class="dc-dates__row">
-        <span class="dc-dates__date">{{ .when.Format "Monday, January 2, 2006" }}</span>
-        <span class="dc-dates__time">{{ .when.Format "3:04 PM" }}</span>
-        {{ with .meeting.rsvp }}
+<div data-dc-schedule data-dc-skip="{{ $skip }}" data-dc-limit="{{ $limit }}">
+  <ul class="dc-dates not-prose" data-dc-items{{ if not $shown }} hidden{{ end }}>
+    {{ range $i, $row := $sorted }}
+      <li class="dc-dates__row" data-dc-when="{{ $row.when.Format "2006-01-02T15:04:05Z07:00" }}"
+          data-dc-until="{{ $row.until.Format "2006-01-02T15:04:05Z07:00" }}"
+          {{- if or (lt $i $skip) (ge $i (add $skip $limit)) }} hidden{{ end }}>
+        <span class="dc-dates__date">{{ $row.when.Format "Monday, January 2, 2006" }}</span>
+        <span class="dc-dates__time">{{ $row.when.Format "3:04 PM" }}</span>
+        {{ with $row.meeting.rsvp }}
           <a class="dc-dates__rsvp" href="{{ . }}" rel="noopener noreferrer" target="_blank">RSVP</a>
         {{ end }}
       </li>
     {{ end }}
   </ul>
-{{ else }}
-  <p>Nothing on the calendar yet. We meet on the {{ hugo.Data.group.cadence }}, so dates
+  <p data-dc-empty{{ if $shown }} hidden{{ end }}>Nothing on the calendar yet. We meet on the {{ hugo.Data.group.cadence }}, so dates
     will appear here as they are confirmed.</p>
-{{ end }}
+</div>

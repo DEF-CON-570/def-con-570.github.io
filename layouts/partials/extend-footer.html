@@ -1,6 +1,7 @@
 {{/* Footer sign-off row. The theme's own attribution is disabled in params so
      this line and the credit can share a single flex row instead of stacking.
-     Also carries the countdown script for the next-meeting card. */}}
+     Also carries the meeting schedule script for the next-meeting card and the
+     upcoming-dates list. */}}
 <div class="dc-footer-prompt">
   <span class="dc-footer-prompt__cmd">
     <span class="dc-prompt__sigil">$</span> uptime
@@ -13,20 +14,57 @@
   </span>
 </div>
 <script>
-  // Turns the meeting date into "in N days". Done client-side so it can never
-  // go stale between builds. Without JS the date alone still shows.
+  // Re-picks which meetings to show against the visitor's clock. The build
+  // decides "upcoming" at build time, and the site only rebuilds on a push, so
+  // the HTML can name a meeting that has already happened. Each
+  // [data-dc-schedule] block holds every meeting that was upcoming at build
+  // time, soonest first; here we drop the ones whose day is over, apply the
+  // block's skip and limit, and fall back to its [data-dc-empty] element if
+  // nothing is left. data-dc-until is midnight after the meeting in the site
+  // timezone, written by the build, so a meeting stays up while it runs and
+  // the cutoff is the same for every visitor whatever their own timezone.
+  // Shown meetings also get an "in N days" countdown. Without JS the
+  // build-time selection stands.
   (function () {
-    var el = document.querySelector("[data-dc-countdown]");
-    if (!el) return;
-    var when = new Date(el.getAttribute("data-dc-countdown"));
-    if (isNaN(when)) return;
-    var days = Math.ceil((when - new Date()) / 86400000);
-    var text =
-      days < 0 ? "" :
-      days === 0 ? "today" :
-      days === 1 ? "tomorrow" :
-      "in " + days + " days";
-    if (text) { el.textContent = text; el.hidden = false; }
+    var now = new Date();
+    var blocks = document.querySelectorAll("[data-dc-schedule]");
+    Array.prototype.forEach.call(blocks, function (block) {
+      var skip = parseInt(block.getAttribute("data-dc-skip"), 10) || 0;
+      var limit = parseInt(block.getAttribute("data-dc-limit"), 10) || 1;
+      var items = block.querySelectorAll("[data-dc-when]");
+      var shown = 0;
+      var future = 0;
+      Array.prototype.forEach.call(items, function (item) {
+        var when = new Date(item.getAttribute("data-dc-when"));
+        var until = new Date(item.getAttribute("data-dc-until"));
+        var show = false;
+        if (!isNaN(when) && !isNaN(until) && until > now) {
+          show = future >= skip && future < skip + limit;
+          future++;
+        }
+        item.hidden = !show;
+        if (!show) return;
+        shown++;
+        var countdown = item.querySelector("[data-dc-countdown]");
+        if (!countdown) return;
+        // Whole calendar days between the two dates, not elapsed time: a 6 PM
+        // meeting viewed at noon the same day is "today", not "tomorrow".
+        var days = Math.round(
+          (new Date(when.getFullYear(), when.getMonth(), when.getDate()) -
+           new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000);
+        // A visitor west of the site timezone can still be on the previous
+        // calendar day when the site's day has ended; clamp to "today".
+        countdown.textContent =
+          days <= 0 ? "today" :
+          days === 1 ? "tomorrow" :
+          "in " + days + " days";
+        countdown.hidden = false;
+      });
+      var list = block.querySelector("[data-dc-items]");
+      if (list) list.hidden = shown === 0;
+      var empty = block.querySelector("[data-dc-empty]");
+      if (empty) empty.hidden = shown > 0;
+    });
   })();
 
   // Hover the tagline and it scrambles, then resolves back. Fires only on

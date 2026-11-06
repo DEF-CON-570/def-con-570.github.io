@@ -315,3 +315,12 @@ landmark and the search signal.
   producing stale output and localhost URLs in absolute links.
 - **`rm -rf public resources` when a CSS or asset change appears to be missing.**
   The resources cache is aggressive.
+- **The meeting schedule is re-picked in the browser.** Hugo's `now` is build time,
+  and Pages only rebuilds on a push, so a build left alone for weeks kept advertising
+  a meeting that had already happened (the September build was still showing
+  October 1 in November). Both meeting partials now render every meeting that was
+  upcoming at build time, and the schedule script in `extend-footer.html` hides the
+  ones whose day is over against the visitor's clock. A meeting stays up through the
+  end of its day (midnight, site timezone, written into `data-dc-until` by the
+  build) so it remains visible while it is running. Without JS the build-time choice
+  stands. To test a stale build locally, use `hugo server --clock <date>`.
