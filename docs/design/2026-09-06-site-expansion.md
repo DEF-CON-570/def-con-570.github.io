@@ -83,7 +83,13 @@ proxied in front of GitHub Pages. No registrar or nameserver change is required.
 1. Build and verify the site on the Pages preview URL.
 2. Attach `defcon570.org` (and `www`) as custom domains on the Pages project; Cloudflare
    updates the proxied records itself.
-3. Disable GitHub Pages in repo settings so two systems are not claiming the domain.
+3. Stop GitHub Pages building the repo, so two systems are not claiming the domain.
+   Pages cannot be disabled here: GitHub treats `def-con-570.github.io` as the
+   DEF-CON-570 organization's own Pages site and refuses to deactivate it. Instead,
+   set Settings → Pages → Source to **GitHub Actions**; with no Pages workflow in the
+   repo, nothing builds. (Done 2026-11-06. Left on "Deploy from a branch", Jekyll
+   tried to build the Hugo source on every push to `main` and failed each time.)
+   Do not add a workflow that deploys to Pages.
 4. Delete the `CNAME` file — a GitHub Pages artifact with no meaning to Cloudflare.
 
 The repo name `def-con-570.github.io` becomes a misnomer after the move. Harmless;
@@ -228,7 +234,7 @@ responsive behavior than the current page.
 |---|---|
 | Theme upgrade breaks the build | Submodule pinned to a tag; upgrade deliberately, verify on a preview deploy |
 | Stale meeting card after a forgotten update | Partial renders an empty state when the data file's date is in the past |
-| Two hosts claim the domain during cutover | Disable GitHub Pages as an explicit cutover step |
+| Two hosts claim the domain during cutover | Switch the GitHub Pages source to GitHub Actions as an explicit cutover step (it cannot be disabled on this repo) |
 | Recordings section launches empty | Deliberate empty state that redirects the reader to a meeting |
 
 ## Open Content Questions
