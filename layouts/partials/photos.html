@@ -1,0 +1,41 @@
+{{/* Meeting photos from data/photos.yaml.
+
+     Only the first four listed are shown, so the homepage stays short and the
+     order in the data file decides which photos are featured.
+
+     One photo renders full width at 16:9; two or more render in a grid at 4:3,
+     two columns for two or four photos, three for three. Images go through Hugo's pipeline, so the source can be a
+     full-size phone photo and visitors get a resized WebP.
+
+     With no photos listed, nothing renders on the live site. On the local
+     preview (hugo server) three labelled placeholders show where the photos
+     will go, so the layout can be judged before any exist. */}}
+{{ $photos := first 4 ((hugo.Data.photos | default dict).photos | default slice) }}
+{{ $n := len $photos }}
+{{ $single := eq $n 1 }}
+{{ $cols := cond (in (slice 2 4) $n) 2 3 }}
+
+{{ if $photos }}
+  <div class="not-prose dc-photos {{ if $single }}dc-photos--single{{ else }}dc-photos--grid dc-photos--cols-{{ $cols }}{{ end }}">
+    {{ range $photos }}
+      {{ $src := resources.Get .src }}
+      {{ if not $src }}{{ errorf "photos.yaml: no file at assets/%s" .src }}{{ end }}
+      {{ if not .alt }}{{ errorf "photos.yaml: %s needs alt text" .src }}{{ end }}
+      {{ $img := cond $single ($src.Process "fill 1400x788 Center webp q80") ($src.Process "fill 800x600 Center webp q78") }}
+      <figure class="dc-photos__item">
+        <img src="{{ $img.RelPermalink }}" width="{{ $img.Width }}" height="{{ $img.Height }}"
+             alt="{{ .alt }}" loading="lazy" decoding="async">
+        {{ with .caption }}<figcaption>{{ . }}</figcaption>{{ end }}
+      </figure>
+    {{ end }}
+  </div>
+{{ else if hugo.IsServer }}
+  <div class="not-prose dc-photos dc-photos--grid dc-photos--cols-3">
+    {{ range seq 3 }}
+      <figure class="dc-photos__item">
+        <div class="dc-photos__ph">photo</div>
+        <figcaption>Preview only. Add photos in data/photos.yaml.</figcaption>
+      </figure>
+    {{ end }}
+  </div>
+{{ end }}

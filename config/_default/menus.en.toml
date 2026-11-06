@@ -22,7 +22,8 @@
 
 # NOTE: Hugo menus are config and cannot read data files, so these footer links
 # duplicate data/links.yaml. That file is the source of truth, so if you add or
-# change a link there, mirror it here.
+# change a link there, mirror it here (except `button: false` entries, which are
+# inline-only).
 [[footer]]
   name = "Discord"
   url = "https://discord.gg/wcxhNzc5e7"
@@ -34,6 +35,6 @@
   weight = 20
 
 [[footer]]
-  name = "DEF CON Forums"
-  url = "https://forum.defcon.org/node/248085"
+  name = "Email"
+  url = "mailto:defcon570@protonmail.com"
   weight = 25

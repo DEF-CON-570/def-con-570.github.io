@@ -1,15 +1,21 @@
-{{/* Renders every entry in data/links.yaml as an icon button.
-     Defined once so the homepage, contact page and anywhere else cannot drift.
-     Sorted by the `weight` field rather than alphabetically by key. */}}
-<div class="flex flex-wrap gap-3 my-6 not-prose">
-  {{ range sort hugo.Data.links "weight" }}
-    <a href="{{ .url }}"
-       rel="noopener noreferrer"
-       target="_blank"
-       title="{{ .blurb | default .name }}"
-       class="inline-flex items-center gap-2 rounded-md border border-neutral-300 px-4 py-2 no-underline transition hover:border-primary-400 hover:text-primary-400 dark:border-neutral-600">
-      <span class="w-5 h-5">{{ partial "icon.html" .icon }}</span>
-      <span>{{ .name }}</span>
+{{/* Renders every entry in data/links.yaml as a link card: icon, name, and
+     the entry's blurb, so visitors on phones (no hover tooltips) still see
+     what each link is for. Defined once so About, Contact and anywhere else
+     cannot drift. Sorted by `weight`. Entries with `button: false` are
+     inline-only links and are skipped here. */}}
+{{ $links := slice }}
+{{ range sort hugo.Data.links "weight" }}
+  {{ if ne .button false }}{{ $links = $links | append . }}{{ end }}
+{{ end }}
+<div class="not-prose dc-grid {{ if eq (len $links) 3 }}dc-grid-3{{ else }}dc-grid-2{{ end }}">
+  {{ range $links }}
+    <a class="dc-card dc-card--link" href="{{ .url }}"{{ if not (hasPrefix .url "mailto:") }} rel="noopener noreferrer" target="_blank"{{ end }}>
+      <span class="dc-card__head">
+        <span class="dc-card__icon">{{ partial "icon.html" .icon }}</span>
+        <span class="dc-card__title">{{ .name }}</span>
+      </span>
+      {{ with .blurb }}<span class="dc-card__body">{{ . }}</span>{{ end }}
+      {{ with .address }}<span class="dc-card__body dc-card__address">{{ . }}</span>{{ end }}
     </a>
   {{ end }}
 </div>

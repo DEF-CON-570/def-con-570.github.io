@@ -3,7 +3,8 @@
 {{- $key := .Get 0 -}}
 {{- $l := index hugo.Data.links $key -}}
 {{- if $l -}}
-<a href="{{ $l.url }}" rel="noopener noreferrer" target="_blank">{{ .Get 1 | default $l.name }}</a>
+{{- /* mailto: opens the mail app; a new tab would just be left blank. */ -}}
+<a href="{{ $l.url }}"{{ if not (hasPrefix $l.url "mailto:") }} rel="noopener noreferrer" target="_blank"{{ end }}>{{ .Get 1 | default $l.name }}</a>
 {{- else -}}
 {{- errorf "link shortcode: no key %q in data/links.yaml" $key -}}
 {{- end -}}

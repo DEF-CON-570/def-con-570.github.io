@@ -2,6 +2,8 @@
 # contact page all read from here, so they cannot drift apart.
 # `icon` must name a file in themes/blowfish/assets/icons/ (without .svg).
 # `weight` controls display order; lower comes first.
+# `button: false` keeps an entry out of the icon buttons (and the footer), for
+# links that only appear inline via {{< link key "text" >}}.
 discord:
   name: "Discord"
   url: "https://discord.gg/wcxhNzc5e7"
@@ -13,10 +15,17 @@ meetup:
   url: "https://www.meetup.com/def-con-570/"
   icon: "location-dot"
   weight: 20
-  blurb: "RSVP for meetings and see what is scheduled."
-forum:
-  name: "DEF CON Forums"
-  url: "https://forum.defcon.org/node/248085"
-  icon: "comment"
+  blurb: "RSVP for meetings and see what’s scheduled."
+email:
+  name: "Email"
+  url: "mailto:defcon570@protonmail.com"
+  address: "defcon570@protonmail.com"
+  icon: "envelope"
   weight: 25
-  blurb: "Our group's page on the official DEF CON forums."
+  blurb: "For sponsors, press, or anything that isn’t a quick chat."
+dcg:
+  name: "DEF CON Groups"
+  url: "https://defcon-groups.org/groups/dcg570-029a9cc5.html"
+  weight: 30
+  blurb: "Our official listing on the DEF CON Groups site."
+  button: false

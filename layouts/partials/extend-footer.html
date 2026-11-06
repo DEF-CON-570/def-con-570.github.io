@@ -5,7 +5,9 @@
 <div class="dc-footer-prompt">
   <span class="dc-footer-prompt__cmd">
     <span class="dc-prompt__sigil">$</span> uptime
-    <span class="dc-footer-prompt__out">DEF CON 570, meeting since 2022</span>
+    {{- $founded := hugo.Data.group.founded | default 2022 -}}
+    {{- $years := sub now.Year $founded -}}
+    <span class="dc-footer-prompt__out">up {{ $years }} year{{ if ne $years 1 }}s{{ end }} &middot; DEF CON 570, meeting since {{ $founded }}</span>
   </span>
   <span class="dc-footer-prompt__attr">
     Powered by

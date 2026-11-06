@@ -1,0 +1,10 @@
+{{/* One-line fact strip for the homepage: when, where, cost. Reads the short
+     forms in data/group.yaml so it stays in step with every other page.
+     "6:00 PM" is shown as "6 PM" to keep the line compact. */}}
+{{- $g := hugo.Data.group -}}
+<ul class="not-prose dc-facts">
+  <li><span class="dc-facts__icon">{{ partial "icon.html" "bell" }}</span>{{ $g.cadence_short }}, {{ replace $g.time ":00" "" }}</li>
+  <li><span class="dc-facts__icon">{{ partial "icon.html" "location-dot" }}</span>{{ $g.venue.name }}, {{ $g.venue.city }}
+    <span aria-hidden="true">&middot;</span> <a href="/meetings/#when-and-where">map &amp; parking</a></li>
+  <li><span class="dc-facts__icon">{{ partial "icon.html" "mug-hot" }}</span>{{ $g.cost_short }}</li>
+</ul>

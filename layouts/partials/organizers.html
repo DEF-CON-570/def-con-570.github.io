@@ -1,0 +1,57 @@
+{{/* Organizer cards from data/organizers.yaml.
+
+     Each card: a round photo (or initials when there is none), name and/or
+     handle, role, a short bio, and optional social icons. An empty bio renders
+     nothing on the live site and a placeholder on the local preview
+     (hugo server), so cards can go live before every bio is written. */}}
+{{ $people := (hugo.Data.organizers | default dict).organizers | default slice }}
+{{ with $people }}
+<div class="not-prose dc-grid dc-grid-3 dc-orgs">
+  {{ range . }}
+    {{/* Handle leads; the real name, when given, is the secondary line. */}}
+    {{ $label := .handle | default .name }}
+    {{ $words := split $label " " }}
+    {{ $initials := upper (substr (index $words 0) 0 1) }}
+    {{ if gt (len $words) 1 }}
+      {{ $initials = printf "%s%s" $initials (upper (substr (index $words (sub (len $words) 1)) 0 1)) }}
+    {{ end }}
+    <div class="dc-card dc-org">
+      <div class="dc-org__head">
+        {{ $photo := "" }}
+        {{ with .photo }}
+          {{ $photo = resources.Get . }}
+          {{ if not $photo }}{{ errorf "organizers.yaml: no file at assets/%s" . }}{{ end }}
+        {{ end }}
+        {{ with $photo }}
+          {{ $img := .Process "fill 160x160 Center webp q80" }}
+          <img class="dc-org__avatar" src="{{ $img.RelPermalink }}" width="80" height="80" alt="" loading="lazy">
+        {{ else }}
+          <span class="dc-org__avatar dc-org__initials" aria-hidden="true">{{ $initials }}</span>
+        {{ end }}
+        <div>
+          <h3 class="dc-org__name">{{ $label }}</h3>
+          <p class="dc-org__meta">
+            {{- if and .name .handle }}<span class="dc-org__realname">{{ .name }}</span>{{ end -}}
+            {{- with .role }}<span class="dc-org__role">{{ . }}</span>{{ end -}}
+          </p>
+        </div>
+      </div>
+      {{ with .bio }}
+        <p class="dc-org__bio">{{ . }}</p>
+      {{ else }}
+        {{ if hugo.IsServer }}<p class="dc-org__bio dc-org__bio--ph">Bio goes here (preview only): who you are and what you do for the group.</p>{{ end }}
+      {{ end }}
+      {{ with .links }}
+        <div class="dc-org__links">
+          {{ range . }}
+            <a href="{{ .url }}" rel="noopener noreferrer me" target="_blank"
+               aria-label="{{ $label }} on {{ .icon | humanize }}" title="{{ .icon | humanize }}">
+              {{ partial "icon.html" .icon }}
+            </a>
+          {{ end }}
+        </div>
+      {{ end }}
+    </div>
+  {{ end }}
+</div>
+{{ end }}

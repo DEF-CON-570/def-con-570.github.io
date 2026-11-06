@@ -1,10 +1,24 @@
 # Group facts used across the site. Edit here and every page follows.
 #
-# Consumed by the {{< cadence >}}, {{< venue >}} and {{< map >}} shortcodes on
-# the homepage and the meetings page.
+# Consumed by the {{< cadence >}}, {{< venue >}}, {{< map >}}, {{< facts >}} and
+# {{< founded >}} shortcodes, the footer, and the event data for search engines.
+#
+# One exception: the `description` in content/meetings.md (the text search
+# engines show) spells out the day, time and venue, because front matter cannot
+# read this file. If those change, update that line too.
+founded: 2022
 cadence: "first Thursday of every month"
 time: "6:00 PM"
-cost: "No cost, no membership, no age limit."
+# When meetings end (24-hour, local time); Rodano's closes at 9. Used only in
+# the event data search engines read, not shown on the page.
+end_time: "21:00"
+# Short forms for the fact strip under the homepage intro.
+cadence_short: "First Thursdays"
+cost_short: "Free, all ages"
+# The usual Meetup event title. The next-meeting card hides a meeting's title
+# when it matches this, and shows it highlighted when it differs (a named talk,
+# a special event), so set a meeting's title in meetups.yaml to promote it.
+meeting_title: "DEF CON 570 Monthly Meetup"
 
 venue:
   name: "Rodano's"

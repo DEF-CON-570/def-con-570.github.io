@@ -50,21 +50,38 @@
       {{ end }}
       <p class="text-lg">
         <strong>{{ $when.Format "Monday, January 2, 2006" }}</strong>
-        &middot; {{ $when.Format "3:04 PM MST" }}
-        <span class="next-meetup__countdown" data-dc-countdown hidden></span>
+        {{/* Time and countdown wrap as one unit so a phone never splits "6:00 / PM". */}}
+        <span class="dc-nowrap">&middot; {{ $when.Format "3:04 PM MST" }}
+        <span class="next-meetup__countdown" data-dc-countdown hidden></span></span>
       </p>
-      <p class="mt-1">{{ $m.title }}</p>
+      {{/* The routine title adds nothing under a "Next meeting" heading; only a
+           special one (a named talk, an event) is worth a line. */}}
+      {{ with $m.title }}{{ if ne . hugo.Data.group.meeting_title }}
+        <p class="mt-1 font-semibold text-primary-400">{{ . }}</p>
+      {{ end }}{{ end }}
       {{ with $m.location }}<p class="mt-1 opacity-80">{{ . }}</p>{{ end }}
-      {{ with $m.rsvp }}
-        <a class="mt-4 inline-block rounded-md border border-primary-400 px-4 py-2 no-underline transition hover:bg-primary-400 hover:text-neutral-900"
-           href="{{ . }}" rel="noopener noreferrer" target="_blank">RSVP on Meetup &rarr;</a>
-      {{ end }}
+      {{/* No event link yet means the Meetup event is not posted, so send people
+           to the events page without calling it an RSVP. */}}
+      {{/* RSVP is the primary action; Discord sits beside it, quieter, styled
+           like the social link buttons. */}}
+      <div class="mt-4 flex flex-wrap gap-3">
+        <a class="inline-block rounded-md border border-primary-400 px-4 py-2 no-underline transition hover:bg-primary-400 hover:text-neutral-900"
+           href="{{ $m.rsvp | default (printf "%sevents/" hugo.Data.links.meetup.url) }}" rel="noopener noreferrer" target="_blank">
+          {{- if $m.rsvp }}RSVP on Meetup{{ else }}See it on Meetup{{ end }} &rarr;</a>
+        {{ with hugo.Data.links.discord }}
+          <a class="inline-flex items-center gap-2 rounded-md border border-neutral-300 px-4 py-2 no-underline transition hover:border-primary-400 hover:text-primary-400 dark:border-neutral-600"
+             href="{{ .url }}" rel="noopener noreferrer" target="_blank">
+            <span class="w-5 h-5">{{ partial "icon.html" .icon }}</span>
+            <span>Join the Discord</span>
+          </a>
+        {{ end }}
+      </div>
     </div>
   {{ end }}
   <div class="next-meetup__empty not-prose my-8 rounded-lg border border-neutral-300 p-6 dark:border-neutral-600"
        data-dc-empty{{ if $sorted }} hidden{{ end }}>
     <h2 class="mt-0 mb-4 text-2xl font-bold">Next meeting</h2>
-    <p>No meeting is on the calendar right now. Check
+    <p>There's no meeting on the calendar right now. Check
       <a class="underline" href="{{ hugo.Data.links.meetup.url }}" rel="noopener noreferrer" target="_blank">our Meetup page</a>
       for the latest, or ask in
       <a class="underline" href="{{ hugo.Data.links.discord.url }}" rel="noopener noreferrer" target="_blank">Discord</a>.</p>

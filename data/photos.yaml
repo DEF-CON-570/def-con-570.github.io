@@ -1,0 +1,22 @@
+# Meeting photos for the homepage, shown after "What happens at a meeting".
+#
+# Put the image in assets/photos/ and list it here. Hugo resizes it and serves
+# WebP, so the original can be a full-size phone photo.
+#
+# Only post photos the people in them are OK with.
+#
+# `alt` is required: describe the scene for people using screen readers.
+# `caption` is optional and shows under the photo.
+#
+# Only the first four entries show on the homepage, so order matters: put the
+# photos you want featured at the top. Extra entries are kept but not shown.
+#
+# One photo shows full width; two or more show in a grid (two columns for two
+# or four photos, three for three).
+photos:
+  - src: "photos/meetup-sdr-intro.png"
+    alt: "A talk at Rodano's: a presenter stands beside a projected slide titled SDR Intro while about fifteen people listen from round tables."
+    caption: "An intro to software-defined radio at Rodano's."
+  - src: "photos/sdr-kit.png"
+    alt: "An RTL-SDR USB dongle plugged into a laptop, wired to a telescoping dipole antenna on a small bendable tripod."
+    caption: "Hands-on: an RTL-SDR dongle and dipole antenna."

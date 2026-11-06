@@ -1,0 +1,64 @@
+{{/* schema.org Event data for the next few meetings, on the homepage and the
+     meetings page only. Search engines read it to show meetings as events in
+     results; nothing on the page changes.
+
+     Same upcoming filter as next-meetup.html (a meeting counts until the end
+     of its day). This is build-time only: a stale build can still list a
+     meeting that has passed, which search engines simply ignore. */}}
+{{ if or .IsHome (eq .RelPermalink "/meetings/") }}
+  {{ $g := hugo.Data.group }}
+  {{ $v := $g.venue }}
+  {{ $upcoming := slice }}
+  {{ range (hugo.Data.meetups | default dict).meetings }}
+    {{ $meeting := . }}
+    {{ with .date }}
+      {{ $d := time.AsTime . }}
+      {{ $until := (time.AsTime ($d.Format "2006-01-02")).AddDate 0 0 1 }}
+      {{ if $until.After now }}
+        {{ $upcoming = $upcoming | append (dict "when" $d "meeting" $meeting) }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+
+  {{ $events := slice }}
+  {{ range first 3 (sort $upcoming "when") }}
+    {{ $m := .meeting }}
+    {{ $start := .when }}
+    {{ $end := time.AsTime (printf "%sT%s:00" ($start.Format "2006-01-02") ($g.end_time | default "21:00")) }}
+    {{ $url := $m.rsvp | default (printf "%sevents/" hugo.Data.links.meetup.url) }}
+    {{ $events = $events | append (dict
+      "@context" "https://schema.org"
+      "@type" "Event"
+      "name" ($m.title | default $g.meeting_title)
+      "description" (printf "Monthly meeting of DEF CON 570, the DEF CON Group for northeastern Pennsylvania: talks, hands-on hacking, and project help. %s." $g.cost_short)
+      "startDate" ($start.Format "2006-01-02T15:04:05-07:00")
+      "endDate" ($end.Format "2006-01-02T15:04:05-07:00")
+      "eventStatus" "https://schema.org/EventScheduled"
+      "eventAttendanceMode" "https://schema.org/OfflineEventAttendanceMode"
+      "isAccessibleForFree" true
+      "url" $url
+      "image" (slice ("og-image.png" | absURL))
+      "location" (dict
+        "@type" "Place"
+        "name" $v.name
+        "address" (dict
+          "@type" "PostalAddress"
+          "streetAddress" $v.street
+          "addressLocality" $v.city
+          "addressRegion" $v.state
+          "postalCode" $v.zip
+          "addressCountry" "US"))
+      "organizer" (dict "@type" "Organization" "name" "DEF CON 570" "url" site.Home.Permalink)
+      "offers" (dict
+        "@type" "Offer"
+        "price" "0"
+        "priceCurrency" "USD"
+        "availability" "https://schema.org/InStock"
+        "url" $url)
+    ) }}
+  {{ end }}
+
+  {{ with $events }}
+    <script type="application/ld+json">{{ . | jsonify | safeJS }}</script>
+  {{ end }}
+{{ end }}

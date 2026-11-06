@@ -1,0 +1,35 @@
+# Organizers, shown on the About page in the order listed here.
+#
+#   handle  Handle people know you by. Shown as the card's heading.
+#   name    Real name. Optional; shown smaller under the handle when given.
+#   role    Short role, e.g. "Co-organizer", "Runs talks".
+#   photo   Optional. Image in assets/organizers/, e.g. "organizers/ryskill.jpg".
+#           Any size; it is cropped square and shown as a circle. Without one,
+#           the card shows initials.
+#   bio     One or two sentences: who you are and what you do for the group.
+#   links   Optional social links. `icon` names a file in
+#           themes/blowfish/assets/icons/ without .svg (linkedin, github,
+#           mastodon, bluesky, x-twitter, youtube, globe, ...).
+#
+# Empty bios are hidden on the live site and shown as a placeholder only on the
+# local preview (hugo server), so a card can go live before its bio is written.
+organizers:
+  - name: "Mark Hunsinger"
+    handle: "Ryskill"
+    role: "Co-organizer"
+    photo: "organizers/ryskill.jpg"
+    bio: "Penetration tester working across networks, web apps, and social engineering. Came up through web development and MSP security, and lately focused on red teaming and adversary emulation. Always happy to talk shop."
+    links:
+      - { icon: "linkedin", url: "https://www.linkedin.com/in/markjhunsinger/" }
+
+  - handle: "Skippy"
+    role: "Co-organizer"
+    photo: ""
+    bio: ""
+    links: []
+
+  - handle: "the_mop"
+    role: "Co-organizer"
+    photo: ""
+    bio: ""
+    links: []

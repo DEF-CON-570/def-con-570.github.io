@@ -1,21 +1,19 @@
 ---
 title: "Contact"
-description: "How to reach the DEF CON 570 organizers."
+description: "Reach the DEF CON 570 organizers by Discord, Meetup, or email. Sponsorship inquiries welcome."
 layout: "simple"
 ---
 
 ## Reach us
 
-The fastest way to get an answer is Discord, where organizers and regulars both hang out.
+The fastest way to get an answer is {{< link discord "our Discord" >}}, where organizers
+and regulars both hang out.
 
 {{< social-links >}}
 
-We do not publish an email address, so Discord is the place to start. If you are not
-on Discord, you can also message the organizers through
-{{< link meetup "our Meetup page" >}}.
+## Support the group
 
-## Sponsors
-
-We are planning annual events, and we will be looking for sponsors when that starts.
-If your organization might be interested, reach the organizers on
-{{< link discord "Discord" >}} or through {{< link meetup "our Meetup page" >}}.
+DEF CON 570 is free and volunteer-run. Sponsors help cover things like hardware for
+hands-on sessions, CTF prizes, and our planned annual events. If your organization
+would like to help, email us at {{< link email "defcon570@protonmail.com" >}} or reach
+the organizers on {{< link discord "Discord" >}}.

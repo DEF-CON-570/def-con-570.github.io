@@ -1,27 +1,41 @@
 {{ define "main" }}
 <section class="dc-404">
   <div class="dc-404__term" role="presentation">
-    <p class="dc-404__line"><span class="dc-prompt__sigil">$</span> locate <span id="dc-404-path">that page</span></p>
-    <p class="dc-404__err">locate: no such file or directory</p>
+    <p class="dc-404__line"><span class="dc-prompt__sigil">$</span> cd <span data-dc-404-path>/that-page/</span></p>
+    <p class="dc-404__err">cd: <span data-dc-404-path>/that-page/</span>: No such file or directory</p>
     <p class="dc-404__line"><span class="dc-prompt__sigil">$</span> ls /<span class="dc-404__cursor" aria-hidden="true"></span></p>
   </div>
 
   <h1 class="dc-404__title">404</h1>
-  <p class="dc-404__lead">That page does not exist. Here is everything that does:</p>
+  <p class="dc-404__lead">That page doesn&rsquo;t exist. Here&rsquo;s everything that does:</p>
 
+  {{/* Same card styling as the homepage, but these are links, so they keep
+       the hover lift that static cards no longer get. */}}
+  {{ $pages := slice
+    (dict "href" "/" "icon" "skull-crossbones" "title" "Home" "blurb" "Next meeting and what we do")
+    (dict "href" "/about/" "icon" "circle-info" "title" "About" "blurb" "Who we are and who runs it")
+    (dict "href" "/meetings/" "icon" "location-dot" "title" "Meetings" "blurb" "When, where, and your first visit")
+    (dict "href" "/recordings/" "icon" "youtube" "title" "Recordings" "blurb" "Talks from past meetings")
+    (dict "href" "/contact/" "icon" "comment" "title" "Contact" "blurb" "How to reach the organizers")
+  }}
   <div class="dc-grid dc-grid-2">
-    <a class="dc-card dc-404__card" href="/"><span class="dc-card__title">Home</span></a>
-    <a class="dc-card dc-404__card" href="/about/"><span class="dc-card__title">About</span></a>
-    <a class="dc-card dc-404__card" href="/meetings/"><span class="dc-card__title">Meetings</span></a>
-    <a class="dc-card dc-404__card" href="/recordings/"><span class="dc-card__title">Recordings</span></a>
-    <a class="dc-card dc-404__card" href="/contact/"><span class="dc-card__title">Contact</span></a>
+    {{ range $pages }}
+      <a class="dc-card dc-card--link" href="{{ .href }}">
+        <span class="dc-card__head">
+          <span class="dc-card__icon">{{ partial "icon.html" .icon }}</span>
+          <span class="dc-card__title">{{ .title }}</span>
+        </span>
+        <span class="dc-card__body">{{ .blurb }}</span>
+      </a>
+    {{ end }}
   </div>
 </section>
 <script>
-  // Echo the path the visitor actually asked for, so the shell line is real.
+  // Echo the path the visitor actually asked for, so the shell lines are real.
   (function () {
-    var el = document.getElementById("dc-404-path");
-    if (el && location && location.pathname) { el.textContent = location.pathname; }
+    if (!location || !location.pathname) return;
+    var els = document.querySelectorAll("[data-dc-404-path]");
+    Array.prototype.forEach.call(els, function (el) { el.textContent = location.pathname; });
   })();
 </script>
 {{ end }}
